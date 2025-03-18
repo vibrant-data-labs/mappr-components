@@ -13,7 +13,9 @@ type GraphContextValue = {
   layout: ShortLayout | null,
   settings: MapprSettings | null,
   selectedNodeId: string | null,
+  searchQuery: string,
   colorScaler: ((value: Node) => string) | null,
+  setSearchQuery: (query: string) => void
 }
 
 export const GraphContext = createContext<GraphContextValue>({
@@ -23,6 +25,8 @@ export const GraphContext = createContext<GraphContextValue>({
   settings: null,
   selectedNodeId: null,
   colorScaler: null,
+  searchQuery: '',
+  setSearchQuery: () => { /* no-op */ }
 });
 
 export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -37,6 +41,7 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [layout, setLayout] = useState<ShortLayout | null>(null);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [colorAttr, setColorAttr] = useState<NodeAttribute | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const colorScaler = useMemo(() => {
     if (!selectionInfoScope?.mapprSettings || !allNodes.length || !nodeAttrs.length) return null;
@@ -138,7 +143,16 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 
   return (
-    <GraphContext.Provider value={{ nodes, nodeAttrs, layout, settings: selectionInfoScope?.mapprSettings || null, selectedNodeId, colorScaler }}>
+    <GraphContext.Provider value={{
+      nodes,
+      nodeAttrs,
+      layout,
+      settings: selectionInfoScope?.mapprSettings || null,
+      selectedNodeId,
+      colorScaler,
+      searchQuery,
+      setSearchQuery
+    }}>
       {children}
     </GraphContext.Provider>
   );

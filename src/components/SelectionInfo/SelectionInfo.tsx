@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useGraphContext } from "../../context/GraphContext";
 import { NodesContainer } from "./NodesContainer";
 import { SortMenu } from "./SortMenu"
+import { SearchInput } from "./SearchInput";
 
 type SortDirection = 'asc' | 'desc';
 
@@ -45,6 +46,9 @@ export const SelectionInfo = () => {
           nodeAttrs={nodeAttrs}
           onSortFieldChanged={handleSortFieldChanged}
           onSortOrderChanged={handleSortOrderChanged} />
+      </div>
+      <div className="filter-header__right-part">
+        <SearchInput />
       </div>
     </div>
     <div id="info-panel-scroll" className=" panel-scroll flex-fill flex-vert-container">

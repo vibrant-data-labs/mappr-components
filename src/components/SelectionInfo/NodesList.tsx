@@ -9,7 +9,7 @@ type NodeListProps = {
   nodes: Node[];
 }
 export const NodesList = ({ nodes }: NodeListProps) => {
-  const { settings, layout, selectedNodeId, colorScaler } = useGraphContext();
+  const { settings, layout, selectedNodeId, colorScaler, searchQuery } = useGraphContext();
   const hoverService = useAngularInjector('hoverService');
   const selectService = useAngularInjector('selectService');
 
@@ -56,7 +56,15 @@ export const NodesList = ({ nodes }: NodeListProps) => {
   }
 
   return <ul className="list-unstyled">
-    {nodes.map((node) => (
+    {nodes.filter(x => {
+      if (!searchQuery || !searchQuery.trim()) {
+        return true;
+      }
+
+      const label = x.attr[settings.labelAttr] as string;
+      if (!label) return false;
+      return label.toLowerCase().includes(searchQuery.toLowerCase());
+    }).map((node) => (
       <li
         key={node.id}
         className={`panel-item list-item pointable-cursor`}
