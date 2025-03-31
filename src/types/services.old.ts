@@ -15,6 +15,8 @@ type DataGraph = {
 type SelectService = {
   getSelectedNodes: () => Node[];
   selectSingleNode: (id: string, listPanelPrevent: boolean) => void;
+  selectNodes: (data: { attr: string, forceDisable?: boolean, min?: number, max?: number, force?: boolean }) => void;
+  hasFilter: (attrId: string) => boolean;
 }
 
 type SubsetService = {

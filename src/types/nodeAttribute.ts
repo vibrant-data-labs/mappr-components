@@ -6,4 +6,9 @@ export type NodeAttribute = {
   visibility: AttributeVisibility[],
   visible: boolean,
   title: string,
+  isInteger: boolean,
+  bounds?: {
+    max: number,
+    min: number;
+  }
 }
