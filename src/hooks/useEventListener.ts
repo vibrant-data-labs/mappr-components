@@ -5,7 +5,6 @@ export const useEventListener = <T>(eventName: string, defaultValue: T) => {
 
     useEffect(() => {
         const handler = (event: CustomEvent<T>) => {
-            console.log('useEventListener', eventName, event);
             setData(event.detail);
         }
 

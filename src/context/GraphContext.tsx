@@ -129,7 +129,6 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const deregisterSnapshotHandler = selectionInfoScope.$on('snapshot:changed', onSwitchSnapshotHandler);
 
     const onColorByChanged = (_: unknown, colorAttr: NodeAttribute) => {
-      console.log('[GraphProvider] onColorByChanged', colorAttr);
       setColorAttr(colorAttr);
     }
 

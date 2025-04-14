@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { NodeAttribute } from '../../types/nodeAttribute';
 import { useAngularElementScope } from '../../hooks/useAngularElementScope';
 import { SliderValue } from './SliderValue';
+import { Node } from '../../types/node';
 
 type SliderProps = {
     attrId?: string;
@@ -130,6 +131,42 @@ export const Slider = ({ attrId }: SliderProps) => {
         }
 
         const deregisterHandler = selectionInfoScope.$on('hss:select', onSelectHandler);
+
+        return () => {
+            deregisterHandler();
+        }
+    }, [selectionInfoScope]);
+
+    useEffect(() => {
+        if (!selectionInfoScope) {
+            return;
+        }
+
+        const onSubsetHandler = (_: unknown, data: {
+            nodes: Node[]
+        }) => {
+            const bounds = data.nodes.reduce((cv, acc) => {
+                const attrVal = acc.attr[attrId!];
+                if (attrVal === undefined || attrVal === null) {
+                    return cv;
+                }
+
+                return {
+                    min: Math.min(cv.min, Number(attrVal)),
+                    max: Math.max(cv.max, Number(attrVal))
+                }
+            }, {
+                max: Number.NEGATIVE_INFINITY,
+                min: Number.POSITIVE_INFINITY
+            });
+
+            setAttr(attr => ({
+                ...attr!,
+                bounds
+            }));
+        }
+
+        const deregisterHandler = selectionInfoScope.$on('hss:subset:changed', onSubsetHandler);
 
         return () => {
             deregisterHandler();
