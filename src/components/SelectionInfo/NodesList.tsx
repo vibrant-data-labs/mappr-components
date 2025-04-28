@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useGraphContext } from "../../context/GraphContext";
 import { useAngularInjector } from "../../hooks/useAngularInjector";
 import { Node } from "../../types/node"
@@ -9,17 +9,82 @@ type NodeListProps = {
   nodes: Node[];
 }
 export const NodesList = ({ nodes }: NodeListProps) => {
-  const { settings, layout, selectedNodeId, colorScaler, searchQuery } = useGraphContext();
+  const { settings, layout, selectedNodeId, selectedScrollDisabled, colorScaler, searchQuery } = useGraphContext();
   const hoverService = useAngularInjector('hoverService');
   const selectService = useAngularInjector('selectService');
 
   useEffect(() => {
-    if (!selectedNodeId) return;
+    if (!selectedNodeId || selectedScrollDisabled) return;
     const el = document.getElementById(`nodelist-item-${selectedNodeId}`);
     if (!el) return;
 
-    el.scrollIntoView({ behavior: 'smooth' })
+    el.scrollIntoView({ behavior: 'smooth' });
+  }, [selectedNodeId, selectedScrollDisabled]);
+
+  const renderNodes = useMemo(() => {
+    if (!settings) {
+      return nodes;
+    }
+
+    return nodes.filter(x => {
+      if (!searchQuery || !searchQuery.trim()) {
+        return true;
+      }
+
+      const label = x.attr[settings.labelAttr] as string;
+      if (!label) return false;
+      return label.toLowerCase().includes(searchQuery.toLowerCase());
+    })
+  }, [nodes, settings, searchQuery]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    }
   }, [selectedNodeId]);
+
+  const handleKeyDown: EventListener = (e: Event) => {
+    const evt = e as KeyboardEvent;
+
+    const listContainer = document.querySelector('.list-unstyled');
+
+    if (!listContainer?.checkVisibility()) {
+      return;
+    }
+
+    if (!['ArrowDown', 'ArrowUp'].includes(evt.key) || !selectService || !selectedNodeId) {
+      return;
+    }
+
+    e.preventDefault();
+
+    const el = document.getElementById(`nodelist-item-${selectedNodeId}`);
+    if (!el) return;
+
+    if (evt.key === 'ArrowDown') {
+      const nextEl = el.nextElementSibling;
+      if (!nextEl) return;
+    }
+    const { nextEl, direction } = evt.key === 'ArrowDown' ? { nextEl: el.nextElementSibling, direction: 'next' } : { nextEl: el.previousElementSibling, direction: 'prev' };
+    if (!nextEl) return;
+
+    const nextId = nextEl.id.replace('nodelist-item-', '');
+    const nextNode = nodes.find(node => node.id === nextId);
+    if (!nextNode) return;
+
+    selectService.selectSingleNode(nextId, true);
+    const boundingRect = nextEl.getBoundingClientRect();
+    const containerRect = listContainer.parentElement?.getBoundingClientRect();
+    const elTop = boundingRect.top - (containerRect?.top || 0);
+    const visibility = nextEl.checkVisibility() && elTop > 0 && boundingRect.bottom <= (containerRect?.bottom || window.innerHeight);
+
+    const shouldScroll = !Boolean(visibility) && ((direction === 'next' && evt.key === 'ArrowDown') || (direction === 'prev' && evt.key === 'ArrowUp'));
+    if (shouldScroll) {
+      nextEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+  }
 
   if (!settings) return null;
 
@@ -56,15 +121,7 @@ export const NodesList = ({ nodes }: NodeListProps) => {
   }
 
   return <ul className="list-unstyled">
-    {nodes.filter(x => {
-      if (!searchQuery || !searchQuery.trim()) {
-        return true;
-      }
-
-      const label = x.attr[settings.labelAttr] as string;
-      if (!label) return false;
-      return label.toLowerCase().includes(searchQuery.toLowerCase());
-    }).map((node) => (
+    {renderNodes.map((node) => (
       <li
         key={node.id}
         className={`panel-item list-item pointable-cursor`}

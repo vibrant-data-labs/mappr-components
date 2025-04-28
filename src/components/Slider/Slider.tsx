@@ -36,7 +36,7 @@ export const Slider = ({ attrId }: SliderProps) => {
     const selectService = useAngularInjector('selectService');
     const { scope: selectionInfoScope } = useAngularElementScope('dir-selection-info');
     const [attr, setAttr] = useState<NodeAttribute | null>(null);
-    const [value, setValue] = useState<[number, number]>([0, 1]);
+    const [value, setValue] = useState<[number, number] | undefined>(undefined);
     const updateRef = useRef<number | null>(null);
     const [isLog, setIsLog] = useState<boolean>(false);
 
@@ -81,7 +81,7 @@ export const Slider = ({ attrId }: SliderProps) => {
         }
 
         updateRef.current = setTimeout(() => {
-            if (!attr.bounds) {
+            if (!attr.bounds || !value) {
                 return;
             }
 
@@ -190,6 +190,9 @@ export const Slider = ({ attrId }: SliderProps) => {
         }
     }
 
+    const startValue = value?.[0] || attr?.bounds?.min || 0;
+    const endValue = value?.[1] || attr?.bounds?.max || 0;
+
     return <div className="range-slider__wrapper">
         {attr && attr.bounds && <RangeSlider
             min={attr.bounds.min}
@@ -206,10 +209,10 @@ export const Slider = ({ attrId }: SliderProps) => {
                 display: 'flex',
                 marginTop: '.5em',
                 alignItems: 'center',
-            }}><SliderValue isLog={isLog} value={value[0]} onValueChange={(v) => {
-                handleInput([v, value[1]]);
-            }} /> — <SliderValue isLog={isLog} value={value[1]} onValueChange={(v) => {
-                handleInput([value[0], v]);
+            }}><SliderValue isLog={isLog} value={startValue} onValueChange={(v) => {
+                handleInput([v, endValue]);
+            }} /> — <SliderValue isLog={isLog} value={endValue} onValueChange={(v) => {
+                handleInput([startValue, v]);
             }} /></label>
             {(attr?.bounds?.min || 0) >= 0 && <div style={{
                 marginTop: '.5em',
