@@ -30,6 +30,12 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
         onValueChange?.(val);
     }
 
+    const minValue = attr.bounds?.min || 0;
+    const maxValue = attr.bounds?.max || 0;
+
+    const sv = minValue > val[0] ? minValue : val[0];
+    const ev = maxValue < val[1] ? maxValue : val[1];
+
     return <>
         {!isInEditMode &&
             <div style={{
@@ -45,13 +51,13 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                     gap: '.5em',
                 }}>
                     <span>
-                        {getReadableNumber(isLog ? Math.log10(val[0] ? val[0] : val[0] + 0.01) : val[0])}
+                        {getReadableNumber(isLog ? Math.log10(sv ? sv : sv + 0.01) : sv)}
                     </span>
                     <span>
                         to
                     </span>
                     <span>
-                        {getReadableNumber(isLog ? Math.log10(val[1] ? val[1] : val[1] + 0.01) : val[1])}
+                        {getReadableNumber(isLog ? Math.log10(ev ? ev : ev + 0.01) : ev)}
                     </span>
                 </div>
                 {(attr?.bounds?.min || 0) >= 0 && <div>
@@ -69,7 +75,7 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                 gap: '.5em',
             }}>
                 <NumericFormat
-                    value={val[0]}
+                    value={isLog ? Math.log10(val[0]) : val[0]}
                     thousandSeparator
                     style={{
                         border: '1px solid #ebeff2',
@@ -79,11 +85,11 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                     }}
                     max={val[1]}
                     onValueChange={(values) => {
-                        setVal([values.floatValue || 0, val[1]]);
+                        setVal([isLog ? Math.pow(10, values.floatValue || val[0]) : values.floatValue || val[0], val[1]]);
                     }}
                 />
                 <NumericFormat
-                    value={val[1]}
+                    value={isLog ? Math.log10(val[1]) : val[1]}
                     thousandSeparator
                     style={{
                         border: '1px solid #ebeff2',
@@ -93,7 +99,7 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                     }}
                     min={val[0]}
                     onValueChange={(values) => {
-                        setVal([val[0], values.floatValue || val[0]]);
+                        setVal([val[0], isLog ? Math.pow(10, values.floatValue || val[0]) : values.floatValue || val[0]]);
                     }}
                 />
                 <button onClick={handleValueChanged}>

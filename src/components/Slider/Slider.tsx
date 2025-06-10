@@ -124,21 +124,12 @@ const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, 
                 return;
             }
 
-            if (isLog) {
-                selectService?.selectNodes({
-                    attr: attr.id,
-                    min: Math.pow(10, startVal),
-                    max: Math.pow(10, endVal),
-                    force: true
-                })
-            } else {
-                selectService?.selectNodes({
-                    attr: attr.id,
-                    min: startVal,
-                    max: endVal,
-                    force: true
-                })
-            }
+            selectService?.selectNodes({
+                attr: attr.id,
+                min: startVal,
+                max: endVal,
+                force: true
+            })
         }, 300);
     }
 
