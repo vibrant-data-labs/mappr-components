@@ -6,6 +6,7 @@ import { NodeAttribute } from '../../types/nodeAttribute';
 import { useAngularElementScope } from '../../hooks/useAngularElementScope';
 import { SliderValue } from './SliderValue';
 import { Node } from '../../types/node';
+import { BinVisualization } from './BinVisualization';
 
 type SliderProps = {
     attrId?: string;
@@ -31,6 +32,7 @@ const getBins = (attrInfo: NodeAttribute) => {
     return nBins;
 }
 
+
 const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, initialValue: [number, number] }) => {
     const selectService = useAngularInjector('selectService');
     const { scope: selectionInfoScope } = useAngularElementScope('dir-selection-info');
@@ -54,7 +56,7 @@ const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, 
             return;
         }
 
-        const onSelectHandler = (_: unknown) => {
+        const onSelectHandler = () => {
             const hasFilter = selectService?.hasFilter(attr.id);
             if (!hasFilter) {
                 setValue([attr!.bounds!.min, attr!.bounds!.max]);
@@ -154,13 +156,22 @@ const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, 
     }
 
     return <div className="range-slider__wrapper">
-        {attr && attr.bounds && <RangeSlider
-            min={attr.bounds.min}
-            max={attr.bounds.max}
-            step={step}
-            onInput={handleChange}
-            defaultValue={value}
-            value={[value?.[0] || 0, value?.[1] || 0]} />}
+        {attr && attr.bounds && (
+            <>
+                <BinVisualization
+                    nBins={getBins(attr)}
+                    attribute={attr}
+                />
+                <RangeSlider
+                    min={attr.bounds.min}
+                    max={attr.bounds.max}
+                    step={step}
+                    onInput={handleChange}
+                    defaultValue={value}
+                    value={[value?.[0] || 0, value?.[1] || 0]}
+                />
+            </>
+        )}
         <span style={{
             marginTop: '.5em',
             width: '100%',

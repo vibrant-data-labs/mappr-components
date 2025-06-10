@@ -79,7 +79,7 @@ export const NodesList = ({ nodes }: NodeListProps) => {
     const elTop = boundingRect.top - (containerRect?.top || 0);
     const visibility = nextEl.checkVisibility() && elTop > 0 && boundingRect.bottom <= (containerRect?.bottom || window.innerHeight);
 
-    const shouldScroll = !Boolean(visibility) && ((direction === 'next' && evt.key === 'ArrowDown') || (direction === 'prev' && evt.key === 'ArrowUp'));
+    const shouldScroll = !visibility && ((direction === 'next' && evt.key === 'ArrowDown') || (direction === 'prev' && evt.key === 'ArrowUp'));
     if (shouldScroll) {
       nextEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
