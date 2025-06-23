@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Node } from "../types/node";
 import { MapprSettings } from "../types/mapprSettings";
 import { NodeAttribute } from "../types/nodeAttribute";
@@ -46,7 +46,7 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [colorAttr, setColorAttr] = useState<NodeAttribute | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const colorScaler = useMemo(() => {
+  const getColorScaler = () => {
     if (!selectionInfoScope?.mapprSettings || !allNodes.length || !nodeAttrs.length) return null;
 
     return colorScaleFactory(
@@ -55,7 +55,7 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       selectionInfoScope.mapprSettings.nodeColorPaletteOrdinal,
       nodeAttrs,
       allNodes);
-  }, [layout, selectionInfoScope, nodeAttrs, allNodes, nodes, colorAttr]);
+  }
 
   const loadNodes = () => {
     if (!dataGraph || !selectService || !subsetService) return;
@@ -154,7 +154,7 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       settings: selectionInfoScope?.mapprSettings || null,
       selectedNodeId,
       selectedScrollDisabled,
-      colorScaler,
+      colorScaler: getColorScaler(),
       searchQuery,
       setSearchQuery
     }}>
