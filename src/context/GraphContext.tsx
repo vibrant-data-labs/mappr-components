@@ -122,9 +122,9 @@ export const GraphProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const deregisterHandler = selectionInfoScope.$on('hss:select', onSelectHandler);
 
-    const onSwitchSnapshotHandler = () => {
+    const onSwitchSnapshotHandler = async () => {
       if (!layoutService) return;
-      const currentLayout = layoutService.getCurrentIfExists();
+      const currentLayout = await layoutService.getCurrent();
       if (currentLayout) {
         setLayout(currentLayout);
       }

@@ -4,6 +4,9 @@ import { NodeAttribute } from "./nodeAttribute";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type RootScope = {
   $on: (event: string, callback: (event: any) => void) => void;
+  geo: {
+    level: string;
+  }
 }
 
 type DataGraph = {
@@ -27,10 +30,15 @@ type SubsetService = {
 export type ShortLayout = {
   scalers: {
     color: (value: string) => string
-  }
+  },
+  geoBuckets?: Record<string, {
+    color: string;
+    nodes: Node[];
+  }[]>;
 }
 type LayoutService = {
   getCurrentIfExists: () => ShortLayout;
+  getCurrent: () => Promise<ShortLayout>;
   ScaleBuilder: any;
 }
 

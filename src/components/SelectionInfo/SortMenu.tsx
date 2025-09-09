@@ -32,6 +32,7 @@ export const SortMenu = ({ sortOrder, nodeAttrs, onSortFieldChanged, onSortOrder
       return;
     }
 
+
     const sortAttrs = nodeAttrs
       .filter(attr => attr.isNumeric && (attr.visibility.includes('filters') || attr.visibility.includes('profile')))
       .map(attr => ({

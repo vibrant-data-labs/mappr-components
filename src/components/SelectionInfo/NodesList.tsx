@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useGraphContext } from "../../context/GraphContext";
-import { useAngularInjector } from "../../hooks/useAngularInjector";
+import { useAngularInjector, useAngularRootScope } from "../../hooks/useAngularInjector";
 import { Node } from "../../types/node"
 import { rgbToRgba } from "../../utils/colorUtils";
 import { NodeLabel } from "../Mappers/NodeLabel";
@@ -12,6 +12,7 @@ export const NodesList = ({ nodes }: NodeListProps) => {
   const { settings, layout, selectedNodeId, selectedScrollDisabled, colorScaler, searchQuery } = useGraphContext();
   const hoverService = useAngularInjector('hoverService');
   const selectService = useAngularInjector('selectService');
+  const rootScope = useAngularRootScope();
 
   useEffect(() => {
     if (!selectedNodeId || selectedScrollDisabled) return;
@@ -106,6 +107,14 @@ export const NodesList = ({ nodes }: NodeListProps) => {
 
   const getNodeColor = (node: Node) => {
     if (layout && settings) {
+      if (settings.nodeColorAttr === 'geo_count' && layout.geoBuckets && rootScope) {
+        const bucket = layout.geoBuckets[rootScope.geo.level].find(bucket => bucket.nodes.some(n => n.id === node.id));
+        if (bucket) {
+          return bucket.color;
+        }
+        return settings.nodeColorDefaultValue;
+      }
+
       const colorVal = node.attr[settings.nodeColorAttr];
       if (colorVal && colorScaler) {
         return colorScaler(node);
