@@ -8,7 +8,7 @@ export default defineConfig({
     targets: [
       {
         src: 'dist/mappr-components.umd.js',
-        dest: '../../mappr-player-webpack/src/libs'
+        dest: '../../openmappr-player/src/libs'
       }
     ],
     watch: {
