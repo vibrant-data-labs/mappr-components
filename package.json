@@ -1,14 +1,11 @@
 {
   "name": "@vibrant-data-labs/mappr-components",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/vibrant-data-labs/mappr-components.git"
-  },
+  "repository": "https://github.com/vibrant-data-labs/mappr-components",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
