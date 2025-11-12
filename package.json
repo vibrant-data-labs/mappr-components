@@ -2,16 +2,22 @@
   "name": "@vibrant-data-labs/mappr-components",
   "version": "0.1.2",
   "type": "module",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "repository": "https://github.com/vibrant-data-labs/mappr-components",
+  "license": "MIT",
+  "author": "Vibrant Data Labs",
+  "keywords": [
+    "mappr",
+    "ui",
+    "components",
+    "reactjs",
+    "typescript"
+  ],
   "scripts": {
-    "dev": "vite",
+    "prepare": "yarn build",
+    "dev": "vite build --watch",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "publish:local": "dotenv -- yarn publish"
+    "preview": "vite preview"
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
@@ -30,11 +36,11 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/d3": "^7.4.3",
+    "@types/node": "^24.10.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/react-infinite-scroller": "^1.2.5",
     "@vitejs/plugin-react": "^4.3.4",
-    "dotenv-cli": "^11.0.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
