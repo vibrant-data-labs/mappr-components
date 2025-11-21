@@ -51,13 +51,13 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                     gap: '.5em',
                 }}>
                     <span>
-                        {attr.attrType === 'year' ? Math.round(isLog ? Math.log10(sv ? sv : sv + 0.01) : sv) : getReadableNumber(isLog ? Math.log10(sv ? sv : sv + 0.01) : sv)}
+                        {getReadableNumber(isLog ? Math.log10(sv ? sv : sv + 0.01) : sv)}
                     </span>
                     <span>
                         to
                     </span>
                     <span>
-                        {attr.attrType === 'year' ? Math.round(isLog ? Math.log10(ev ? ev : ev + 0.01) : ev) : getReadableNumber(isLog ? Math.log10(ev ? ev : ev + 0.01) : ev)}
+                        {getReadableNumber(isLog ? Math.log10(ev ? ev : ev + 0.01) : ev)}
                     </span>
                 </div>
                 {(attr?.bounds?.min || 0) >= 0 && <div>
