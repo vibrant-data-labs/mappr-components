@@ -7,7 +7,6 @@ export type NodeAttribute = {
   visible: boolean,
   title: string,
   isInteger: boolean,
-  attrType?: string,
   bounds?: {
     max: number,
     min: number;

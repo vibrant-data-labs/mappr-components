@@ -10,7 +10,6 @@ import { BinVisualization } from './BinVisualization';
 
 type SliderProps = {
     attrId?: string;
-    attrType?: string;
 }
 
 const getBins = (attrInfo: NodeAttribute) => {
@@ -174,7 +173,7 @@ const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, 
     </div>
 }
 
-export const Slider = ({ attrId, attrType }: SliderProps) => {
+export const Slider = ({ attrId }: SliderProps) => {
     const dataGraph = useAngularInjector('dataGraph');
     const [attr, setAttr] = useState<NodeAttribute | null>(null);
     const [value, setValue] = useState<[number, number] | undefined>([0, 0]);
@@ -189,12 +188,8 @@ export const Slider = ({ attrId, attrType }: SliderProps) => {
         if (!attrItem) {
             return;
         }
-        // Add attrType if provided
-        if (attrType) {
-            attrItem.attrType = attrType;
-        }
         setAttr(attrItem);
-    }, [dataGraph, attrType]);
+    }, [dataGraph]);
 
     useEffect(() => {
         if (!attr || !attr.bounds) {
