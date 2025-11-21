@@ -1,10 +1,20 @@
 {
-  "name": "mappr-components",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@vibrant-data-labs/mappr-components",
+  "version": "0.1.2",
   "type": "module",
+  "repository": "https://github.com/vibrant-data-labs/mappr-components",
+  "license": "MIT",
+  "author": "Vibrant Data Labs",
+  "keywords": [
+    "mappr",
+    "ui",
+    "components",
+    "reactjs",
+    "typescript"
+  ],
   "scripts": {
-    "dev": "vite",
+    "prepare": "yarn build",
+    "dev": "vite build --watch",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -26,6 +36,7 @@
   "devDependencies": {
     "@eslint/js": "^9.17.0",
     "@types/d3": "^7.4.3",
+    "@types/node": "^24.10.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/react-infinite-scroller": "^1.2.5",
@@ -39,5 +50,5 @@
     "vite": "^6.0.5",
     "vite-plugin-static-copy": "^2.2.0"
   },
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
+  "packageManager": "yarn@1.22.22"
 }
