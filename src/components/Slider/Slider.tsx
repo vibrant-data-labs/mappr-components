@@ -114,7 +114,7 @@ const SliderElement = ({ attribute, initialValue }: { attribute: NodeAttribute, 
             clearTimeout(updateRef.current);
         }
 
-        updateRef.current = setTimeout(() => {
+        updateRef.current = window.setTimeout(() => {
             if (!attr.bounds || !val) {
                 return;
             }
