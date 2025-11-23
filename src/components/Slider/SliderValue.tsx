@@ -36,6 +36,15 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
     const sv = minValue > val[0] ? minValue : val[0];
     const ev = maxValue < val[1] ? maxValue : val[1];
 
+
+    const formatNumber = (num: number, attr: NodeAttribute) => {
+        const logValue = isLog ? Math.log10(num ? num : num + 0.01) : num;
+        if (attr.attrType === 'year') {
+            return num;
+        }
+        return getReadableNumber(logValue);
+    }
+
     return <>
         {!isInEditMode &&
             <div style={{
@@ -51,13 +60,13 @@ export const SliderValue = ({ isLog, attr, startValue, endValue, onValueChange, 
                     gap: '.5em',
                 }}>
                     <span>
-                        {getReadableNumber(isLog ? Math.log10(sv ? sv : sv + 0.01) : sv)}
+                        {formatNumber(sv, attr)}
                     </span>
                     <span>
                         to
                     </span>
                     <span>
-                        {getReadableNumber(isLog ? Math.log10(ev ? ev : ev + 0.01) : ev)}
+                        {formatNumber(ev, attr)}
                     </span>
                 </div>
                 {(attr?.bounds?.min || 0) >= 0 && <div>
